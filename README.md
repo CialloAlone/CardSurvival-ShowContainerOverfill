@@ -1,6 +1,3 @@
-# v1.04 Note
-Note - This is only for v1.04, which is the beta branch called "updatebranch".
-
 ![Overfill to filled compare](media/SackCompare.png)
 
 # Show Container Overfill

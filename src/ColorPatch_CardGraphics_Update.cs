@@ -17,7 +17,6 @@ namespace ShowContainerOverfill
 
         public static void Postfix(CardGraphics __instance)
         {
-
             //The logic that reaches the container fill bar change.
             if (!(__instance.CardLogic != null && __instance.CardLogic.CardModel != null && __instance.CardLogic.CardModel.CardType != CardTypes.Explorable
                 && __instance.CardLogic.CardsInInventory != null
@@ -34,14 +33,9 @@ namespace ShowContainerOverfill
                 DefaultBarColor = image.color;
             }
 
-            if (__instance.CardLogic.InventoryWeight(false) > 0)
-            {
-                image.color = Color.red;
-            }
-            else
-            {
-                image.color = DefaultBarColor;
-            }
+            if (__instance.CardLogic.InventoryWeight(false) > 0) image.color = Plugin.OverfillColor.Value;
+            else if (InGameCardBase_CanReceiveInInventoryInstance_Patch.PreventOverfill) image.color = Plugin.OverfillLockColor.Value;
+            else image.color = DefaultBarColor;
 
             return;
         }

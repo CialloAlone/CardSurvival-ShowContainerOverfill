@@ -84,8 +84,11 @@ Safe to add and remove from existing saves.
 
 # Change Log 
 
+## 2.1.0
+* Fixed drag and drop not handling overfill lock.
+
 ## 2.0.0
-Added "prevent overfill" toggle functionality
+* Added "prevent overfill" toggle functionality
 
 ## 1.0.0  
 * Initial Release

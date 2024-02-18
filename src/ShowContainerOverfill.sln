@@ -9,12 +9,18 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Debug-MelonLoader|Any CPU = Debug-MelonLoader|Any CPU
+		Release-MelonLoader|Any CPU = Release-MelonLoader|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Debug-MelonLoader|Any CPU.ActiveCfg = Debug-MelonLoader|Any CPU
+		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Debug-MelonLoader|Any CPU.Build.0 = Debug-MelonLoader|Any CPU
+		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Release-MelonLoader|Any CPU.ActiveCfg = Release-MelonLoader|Any CPU
+		{D38B7760-8BE4-408C-A65D-33DA84D57069}.Release-MelonLoader|Any CPU.Build.0 = Release-MelonLoader|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShowContainerOverfill
 {
@@ -12,7 +13,7 @@ namespace ShowContainerOverfill
     {
         public static void Postfix()
         {
-            if(Plugin.OverfillLockKey.Value.IsUp())
+            if(Input.GetKeyUp(Plugin.OverfillLockKey))
             {
                 InGameCardBase_CanReceiveInInventoryInstance_Patch.PreventOverfill =! 
                     InGameCardBase_CanReceiveInInventoryInstance_Patch.PreventOverfill;

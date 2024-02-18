@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>ShowContainerOverfill</AssemblyName>
-    <Description>My first plugin</Description>
+    <Description>CSTI Detailed Card Progress Mod</Description>
     <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
@@ -12,6 +12,22 @@
       https://nuget.bepinex.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>ShowContainerOverfill</RootNamespace>
+    <BepInExPatch>D:\Program Files (x86)\Steam\steamapps\common\Card Survival Tropical Island</BepInExPatch>
+    <GameAssemblyPath Condition="'$(GameAssemblyPath)' == ''">$(BepInExPatch)\Card Survival - Tropical Island_Data\Managed</GameAssemblyPath>
+    <GameAssemblyPath Condition="'$(GameAssemblyPath)' != '' and ('$(Configuration)'=='Release-MelonLoader' or '$(Configuration)'=='Debug-MelonLoader')">$(BepInExPatch)\BepInEx\android\managed</GameAssemblyPath>
+    <MelonLoaderAssemblyPath Condition="'$(MelonLoaderAssemblyPath)' == ''">$(BepInExPatch)\BepInEx\android</MelonLoaderAssemblyPath>
+    <AssemblyUnhollowerAssemblyPath Condition="'$(AssemblyUnhollowerAssemblyPath)' == ''">$(BepInExPatch)\BepInEx\android\assembly_generation</AssemblyUnhollowerAssemblyPath>
+    <Configurations>Debug;Release;Release-MelonLoader;Debug-MelonLoader</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-MelonLoader|AnyCPU'">
+    <DefineConstants>TRACE;MELON_LOADER</DefineConstants>
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-MelonLoader|AnyCPU'">
+    <DefineConstants>TRACE;MELON_LOADER</DefineConstants>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,17 +43,71 @@
   
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>D:\Games\Steam\steamapps\common\Card Survival Tropical Island\Card Survival - Tropical Island_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(GameAssemblyPath)\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>D:\Games\Steam\steamapps\common\Card Survival Tropical Island\Card Survival - Tropical Island_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>$(GameAssemblyPath)\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>D:\Games\Steam\steamapps\common\Card Survival Tropical Island\Card Survival - Tropical Island_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(GameAssemblyPath)\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="xcopy /y &quot;$(ProjectDir)$(OutDir)$(AssemblyName).*&quot; &quot;D:\Games\Steam\steamapps\common\Card Survival Tropical Island\BepInEx\plugins\&quot;" />
-	</Target>
+  <ItemGroup Condition="'$(Configuration)'=='Release-MelonLoader' or '$(Configuration)'=='Debug-MelonLoader'">
+    <Reference Include="MelonLoader">
+      <HintPath>$(MelonLoaderAssemblyPath)\MelonLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="AssemblyUnhollower">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\AssemblyUnhollower.dll</HintPath>
+    </Reference>
+    <Reference Include="Iced">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\Iced.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppMono.Security">
+      <HintPath>$(GameAssemblyPath)\Il2CppMono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(GameAssemblyPath)\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem">
+      <HintPath>$(GameAssemblyPath)\Il2CppSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Configuration">
+      <HintPath>$(GameAssemblyPath)\Il2CppSystem.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Core">
+      <HintPath>$(GameAssemblyPath)\Il2CppSystem.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Diagnostics.StackTrace">
+      <HintPath>$(GameAssemblyPath)\Il2CppSystem.Diagnostics.StackTrace.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Globalization.Extensions">
+      <HintPath>$(GameAssemblyPath)\Il2CppSystem.Globalization.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Xml">
+      <HintPath>$(GameAssemblyPath)\Il2CppSystem.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="UnhollowerBaseLib">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\UnhollowerBaseLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnhollowerRuntimeLib">
+      <HintPath>$(AssemblyUnhollowerAssemblyPath)\UnhollowerRuntimeLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+<!--	<Target Name="PostBuild" AfterTargets="PostBuildEvent">-->
+<!--		<Exec Command="xcopy /y &quot;$(ProjectDir)$(OutDir)$(AssemblyName).*&quot; &quot;D:\Games\Steam\steamapps\common\Card Survival Tropical Island\BepInEx\plugins\&quot;" />-->
+<!--	</Target>-->
 </Project>

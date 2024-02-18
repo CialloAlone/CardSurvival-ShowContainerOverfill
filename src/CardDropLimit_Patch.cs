@@ -13,79 +13,30 @@ namespace ShowContainerOverfill
     [HarmonyPatch(typeof(InGameCardBase), nameof(InGameCardBase.GetIndexForInventory))]
     public static class CardDropLimit_Patch
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static void Postfix(ref int __result, InGameCardBase __instance, CardData _ForCard, ref float _CardWeight)
         {
-
-            //Original code:
-
-            //// if (_CardWeight > MaxWeightCapacity - InventoryWeight(_IgnoreBonus: true))
-            //IL_00fa: ldarg.s _CardWeight
-            //IL_00fc: ldarg.0
-            //IL_00fd: call instance float32 InGameCardBase::get_MaxWeightCapacity()
-            //IL_0102: ldarg.0
-            //IL_0103: ldc.i4.1
-            //IL_0104: call instance float32 InGameCardBase::InventoryWeight(bool)
-            //IL_0109: sub
-            //IL_010a: ble.un.s IL_011f
-
-            //Goal:
-            //  Reuse the computed weight on the stack (IL_00fd).
-            //  load "this" on the stack, 
-            //  call GetMaxWeightLimit, which returns the adjusted weight as a float.
-
-            MethodInfo maxWeightCapacityProperty = AccessTools.DeclaredProperty(typeof(InGameCardBase), nameof(InGameCardBase.MaxWeightCapacity))
-                .GetGetMethod();
-
-            List<CodeInstruction> instructionList = instructions.ToList();
-
-            //foreach (var instruction in instructionList)
-            //{
-            //    Plugin.LogInfo($"{instruction.ToString()} - {instruction.operand?.GetType().Name}");
-            //}
-
-
-            MethodInfo getMaxWeightLimitMethod = AccessTools.Method(typeof(CardDropLimit_Patch), nameof(CardDropLimit_Patch.GetMaxWeightLimit));
-
-            List<CodeInstruction> newInstructions = new CodeMatcher(instructionList)
-                .MatchForward(true,
-                    new CodeMatch(OpCodes.Starg_S, (byte)4),
-                    new CodeMatch(OpCodes.Ldarg_S, (byte)4),
-                    new CodeMatch(OpCodes.Ldarg_0),
-                    new CodeMatch(OpCodes.Call, maxWeightCapacityProperty)
-                    )
-                .ThrowIfNotMatch("Did not find max weight capacity call.")
-                .Advance(1)
-                .InsertAndAdvance(
-                    new CodeInstruction(OpCodes.Ldarg_0), //The in game card
-                    new CodeInstruction(OpCodes.Call, getMaxWeightLimitMethod) 
-                )
-                .InstructionEnumeration()
-                .ToList();
-
-
-            //Plugin.LogInfo("--------- after");
-            //foreach (var instruction in newInstructions)
-            //{
-            //    Plugin.LogInfo($"{instruction.ToString()} - {instruction.operand?.GetType().Name}");
-            //}
-
-            return newInstructions;
-        }
-
-        public static float GetMaxWeightLimit(float computedMax, InGameCardBase card)
-        {
-
-            if (InGameCardBase_CanReceiveInInventoryInstance_Patch.PreventOverfill == false)
+            if (InGameCardBase_CanReceiveInInventoryInstance_Patch.PreventOverfill == false || __result == -1)
             {
-                return computedMax;
+                return;
             }
 
-            
+            if (__instance.CardModel.CardType is CardTypes.Blueprint or CardTypes.EnvImprovement or CardTypes.EnvDamage)
+            {
+                return;
+            }
 
+            if (!__instance.IsLegacyInventory && (bool) (UnityEngine.Object) _ForCard)
+            {
+                // 应用自定义规则计算新的最大权重限制
+                float weightReduction = __instance.CardModel.ContentWeightReduction * -1;
+                float maxWeight = weightReduction == 0  ? __instance.MaxWeightCapacity : weightReduction;
 
-            float result = card.CardModel.ContentWeightReduction == 0 ? computedMax : card.CardModel.ContentWeightReduction * -1;
-
-            return result;
+                if (_CardWeight > maxWeight - __instance.InventoryWeight(true))
+                {
+                    Plugin.LogInfo($"修改前返回值: {__result}, 最大重量: {maxWeight}, 当前重量: {__instance.InventoryWeight(true)}, 卡片重量: {_CardWeight}");
+                    __result = -1;
+                }
+            }
         }
     }
 }

@@ -33,8 +33,8 @@ namespace ShowContainerOverfill
                 DefaultBarColor = image.color;
             }
 
-            if (__instance.CardLogic.InventoryWeight(false) > 0) image.color = Plugin.OverfillColor.Value;
-            else if (InGameCardBase_CanReceiveInInventoryInstance_Patch.PreventOverfill) image.color = Plugin.OverfillLockColor.Value;
+            if (__instance.CardLogic.InventoryWeight(false) > 0) image.color = Plugin.OverfillColor;
+            else if (InGameCardBase_CanReceiveInInventoryInstance_Patch.PreventOverfill) image.color = Plugin.OverfillLockColor;
             else image.color = DefaultBarColor;
 
             return;
